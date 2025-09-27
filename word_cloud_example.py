@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 Simple Word Cloud Example
 This script demonstrates how to create a word cloud where bigger words represent higher frequency.
