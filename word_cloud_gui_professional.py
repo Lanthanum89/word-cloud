@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Word Cloud GUI Application
-This application provides a graphical interface for creating word clouds from website content.
+Professional Word Cloud GUI Application
+This application provides a modern, professional graphical interface for creating word clouds from website content.
 """
 
 import tkinter as tk
@@ -16,24 +16,8 @@ from collections import Counter
 import threading
 from urllib.parse import urlparse
 import os
-
-class WordCloudGUI:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Website Word Cloud Generator")
-        self.root.geometry("1000x700")
-        self.root.configure(bg='#f0f0f0')
-        
-        # Variables
-        self.word_frequencies = {}
-        self.current_wordcloud = None
-        
-        # Create GUI elements
-        self.create_widgets()
-import threading
-from urllib.parse import urlparse
-import os
 import webbrowser
+import random
 
 class ProfessionalWordCloudGUI:
     def __init__(self, root):
@@ -128,7 +112,7 @@ class ProfessionalWordCloudGUI:
                        font=('Segoe UI', 11, 'bold'),
                        background=self.colors['white'],
                        foreground=self.colors['primary'])
-        
+
     def create_widgets(self):
         """Create and arrange modern GUI widgets"""
         
@@ -143,7 +127,7 @@ class ProfessionalWordCloudGUI:
         
         # App title
         title_label = tk.Label(header_frame, 
-                              text="🌐 Professional Word Cloud Generator",
+                              text="🌐 Word Cloud Generator",
                               font=('Segoe UI', 18, 'bold'),
                               bg=self.colors['primary'],
                               fg=self.colors['white'])
@@ -190,7 +174,7 @@ class ProfessionalWordCloudGUI:
         self.generate_btn.pack(fill=tk.X)
         
         # Progress bar
-        self.progress = ttk.Progressbar(url_frame, mode='indeterminate', style='Modern.Horizontal.TProgressbar')
+        self.progress = ttk.Progressbar(url_frame, mode='indeterminate')
         self.progress.pack(fill=tk.X, pady=(10, 0))
         
         # Options Card
@@ -281,7 +265,14 @@ class ProfessionalWordCloudGUI:
         viz_card.pack(fill=tk.BOTH, expand=True)
         
         # Create matplotlib figure with modern styling
-        plt.style.use('seaborn-v0_8-whitegrid' if 'seaborn-v0_8-whitegrid' in plt.style.available else 'default')
+        try:
+            plt.style.use('seaborn-v0_8-whitegrid')
+        except:
+            try:
+                plt.style.use('seaborn-whitegrid')
+            except:
+                plt.style.use('default')
+                
         self.fig, self.ax = plt.subplots(figsize=(12, 8), facecolor='white')
         self.ax.set_facecolor('white')
         self.ax.axis('off')
@@ -316,7 +307,7 @@ Try the demo URL or paste your own website link to get started!"""
                                bg=self.colors['primary'], 
                                fg=self.colors['white'])
         status_label.pack(expand=True)
-        
+
     def load_demo_url(self):
         """Load a demo URL for testing"""
         demo_urls = [
@@ -326,7 +317,6 @@ Try the demo URL or paste your own website link to get started!"""
             "https://docs.python.org/3/tutorial/",
             "https://en.wikipedia.org/wiki/Data_science"
         ]
-        import random
         demo_url = random.choice(demo_urls)
         self.url_var.set(demo_url)
         self.status_var.set(f"Loaded demo URL: {demo_url.split('/')[-1].replace('_', ' ').title()}")
@@ -338,7 +328,7 @@ Try the demo URL or paste your own website link to get started!"""
         self.root.bind('<Control-s>', lambda e: self.save_image())
         self.root.bind('<Control-l>', lambda e: self.clear_display())
         self.root.bind('<Control-d>', lambda e: self.load_demo_url())
-    
+
     def fetch_website_content(self, url):
         """Fetch and parse website content"""
         try:
@@ -417,20 +407,20 @@ Try the demo URL or paste your own website link to get started!"""
         try:
             max_words = int(self.max_words_var.get())
         except ValueError:
-            max_words = 100
+            max_words = 150
             
         wordcloud = WordCloud(
-            width=800,
-            height=400,
+            width=1000,
+            height=600,
             background_color=self.background_var.get(),
             colormap=self.colormap_var.get(),
             max_words=max_words,
             relative_scaling=0.5,
-            min_font_size=10,
-            max_font_size=80,
-            prefer_horizontal=0.8,
+            min_font_size=12,
+            max_font_size=100,
+            prefer_horizontal=0.7,
             collocations=False,
-            margin=10
+            margin=20
         ).generate_from_frequencies(word_frequencies)
         
         return wordcloud
@@ -438,11 +428,22 @@ Try the demo URL or paste your own website link to get started!"""
     def update_display(self, wordcloud):
         """Update the matplotlib display with new word cloud"""
         self.ax.clear()
-        self.ax.imshow(wordcloud, interpolation='bilinear')
+        
+        # Fix upside down display by setting origin to 'upper'
+        self.ax.imshow(wordcloud, interpolation='bilinear', origin='upper')
         self.ax.axis('off')
+        
+        # Add a subtle border effect
+        self.ax.set_xlim(0, wordcloud.width)
+        self.ax.set_ylim(wordcloud.height, 0)  # Flip Y-axis to match image orientation
+        
         self.canvas.draw()
         self.current_wordcloud = wordcloud
         self.save_btn.config(state='normal')
+        
+        # Show word count in status
+        word_count = len(self.word_frequencies) if hasattr(self, 'word_frequencies') else 0
+        self.status_var.set(f"✓ Word cloud created successfully! ({word_count} unique words processed)")
     
     def generate_wordcloud_thread(self):
         """Generate word cloud in separate thread"""
@@ -452,38 +453,42 @@ Try the demo URL or paste your own website link to get started!"""
             messagebox.showerror("Error", "Please enter a valid website URL")
             self.progress.stop()
             self.generate_btn.config(state='normal')
-            self.status_var.set("Ready")
+            self.status_var.set("Ready • Professional Word Cloud Generator v2.0")
             return
         
         try:
-            self.status_var.set("Fetching website content...")
+            self.status_var.set("🌐 Fetching website content...")
             text = self.fetch_website_content(url)
             
             if not text.strip():
                 raise Exception("No text content found on the website")
             
-            self.status_var.set("Processing text...")
+            self.status_var.set("🔍 Processing text and analyzing words...")
             word_frequencies = self.process_text(text)
+            self.word_frequencies = word_frequencies
             
             if not word_frequencies:
                 raise Exception("No valid words found after processing")
             
-            self.status_var.set("Creating word cloud...")
+            self.status_var.set("🎨 Creating beautiful word cloud...")
             wordcloud = self.create_wordcloud_image(word_frequencies)
             
             # Update GUI in main thread
             self.root.after(0, lambda: self.update_display(wordcloud))
-            self.root.after(0, lambda: self.status_var.set(f"Word cloud created from {len(word_frequencies)} unique words"))
             
         except Exception as e:
             self.root.after(0, lambda: messagebox.showerror("Error", str(e)))
-            self.root.after(0, lambda: self.status_var.set("Error occurred"))
+            self.root.after(0, lambda: self.status_var.set("❌ Error occurred - Please try again"))
         finally:
             self.root.after(0, lambda: self.progress.stop())
             self.root.after(0, lambda: self.generate_btn.config(state='normal'))
     
     def generate_wordcloud(self):
         """Start word cloud generation"""
+        if self.processing:
+            return
+            
+        self.processing = True
         self.generate_btn.config(state='disabled')
         self.progress.start(10)
         
@@ -507,21 +512,33 @@ Try the demo URL or paste your own website link to get started!"""
         if filename:
             try:
                 self.current_wordcloud.to_file(filename)
-                messagebox.showinfo("Success", f"Word cloud saved as {filename}")
-                self.status_var.set(f"Image saved: {os.path.basename(filename)}")
+                messagebox.showinfo("Success", f"Word cloud saved successfully!\n\nLocation: {filename}")
+                self.status_var.set(f"💾 Image saved: {os.path.basename(filename)}")
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to save image: {str(e)}")
     
     def clear_display(self):
         """Clear the word cloud display"""
         self.ax.clear()
-        self.ax.text(0.5, 0.5, 'Enter a website URL and click "Generate Word Cloud" to begin', 
-                    horizontalalignment='center', verticalalignment='center', 
-                    transform=self.ax.transAxes, fontsize=14, color='gray')
+        
+        welcome_text = """🎨 Welcome to Professional Word Cloud Generator
+        
+Enter a website URL and click "Generate Word Cloud" to create beautiful visualizations.
+
+Try the demo URL or paste your own website link to get started!"""
+        
+        self.ax.text(0.5, 0.5, welcome_text, 
+                    horizontalalignment='center', 
+                    verticalalignment='center', 
+                    transform=self.ax.transAxes, 
+                    fontsize=14, 
+                    color=self.colors['dark'],
+                    bbox=dict(boxstyle="round,pad=0.5", facecolor=self.colors['light'], alpha=0.8))
+        
         self.canvas.draw()
         self.current_wordcloud = None
         self.save_btn.config(state='disabled')
-        self.status_var.set("Ready")
+        self.status_var.set("Ready • Professional Word Cloud Generator v2.0")
 
 def main():
     """Main function to run the professional GUI application"""
