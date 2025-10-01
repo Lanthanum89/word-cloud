@@ -1,6 +1,6 @@
 # Word Cloud GUI Application
 
-A graphical user interface application that creates word clouds from website content. Simply enter a website URL and the application will automatically fetch the content, process the text, and generate a beautiful word cloud visualization.
+A graphical user interface application that creates word clouds from website content. Simply enter a website URL and the application will automatically fetch the content, process the text, and generate a beautiful word cloud visualisation.
 
 ## Features
 
