@@ -1,12 +1,12 @@
 # Word Cloud GUI Application
 
-A graphical user interface application that creates word clouds from website content. Enter a website URL and the app automatically fetches the page, processes the text, and renders a beautiful word cloud visualisation.
+A graphical user interface application that creates word clouds from website content. Simply enter a website URL and the application will automatically fetch the content, process the text, and generate a beautiful word cloud visualization.
 
 ## Features
 
 - **Modern GUI**: Responsive two-panel layout with rich styling and handy keyboard shortcuts
 - **Web scraping**: Automatically fetches and processes content from any website
-- **Dynamic customisation**:
+- **Customizable options**: 
   - Adjust maximum number of words
   - Set minimum word length filter
   - Choose from multiple colour schemes even after the cloud is generated
@@ -70,24 +70,21 @@ The application works with most public websites that allow web scraping. Some we
 
 ## Troubleshooting
 
-**"Error fetching website"**:
+**"Error fetching website"**: 
+- Check if the URL is correct and accessible
+- Some websites block automated requests
+- Try a different website
 
-- Check if the URL is correct and accessible.
-- Some websites block automated requests.
-- Try a different website.
+**"No valid words found"**: 
+- The website might have very little text content
+- Try lowering the minimum word length
+- Check if the website loaded properly
 
-**"No valid words found"**:
-
-- The website might have very little text content.
-- Try lowering the minimum word length.
-- Check if the website loaded properly.
-
-**GUI not responding**:
-
-- The application processes content in the background.
-- Wait for the progress bar to complete.
-- Large websites may take longer to process.
+**GUI not responding**: 
+- The application processes content in the background
+- Wait for the progress bar to complete
+- Large websites may take longer to process
 
 ## Original Word Cloud Example
 
-This GUI application is based on the original `word_cloud_example.py`, which demonstrates basic word cloud creation with sample data. The GUI version extends this functionality with web scraping and a user-friendly interface.
+This GUI application is based on the original `word_cloud_example.py` which demonstrates basic word cloud creation with sample data. The GUI version extends this functionality with web scraping and a user-friendly interface.
