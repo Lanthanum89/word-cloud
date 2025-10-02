@@ -6,7 +6,7 @@ A graphical user interface application that creates word clouds from website con
 
 - **Easy-to-use GUI**: Simple interface with URL input and one-click generation
 - **Web scraping**: Automatically fetches and processes content from any website
-- **Customizable options**: 
+- **Customizable options**:
   - Adjust maximum number of words
   - Set minimum word length filter
   - Choose from multiple color schemes
@@ -62,17 +62,17 @@ The application works with most public websites that allow web scraping. Some we
 
 ## Troubleshooting
 
-**"Error fetching website"**: 
+**"Error fetching website"**:
 - Check if the URL is correct and accessible
 - Some websites block automated requests
 - Try a different website
 
-**"No valid words found"**: 
+**"No valid words found"**:
 - The website might have very little text content
 - Try lowering the minimum word length
 - Check if the website loaded properly
 
-**GUI not responding**: 
+**GUI not responding**:
 - The application processes content in the background
 - Wait for the progress bar to complete
 - Large websites may take longer to process
