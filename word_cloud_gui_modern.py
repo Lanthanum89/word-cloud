@@ -416,7 +416,6 @@ Try the demo URL or paste your own website link to get started!"""
             background_color=self.background_var.get(),
             colormap=self.colormap_var.get(),
             max_words=max_words,
-            relative_scaling=0.5,
             min_font_size=12,
             max_font_size=100,
             prefer_horizontal=0.7,
@@ -426,7 +425,7 @@ Try the demo URL or paste your own website link to get started!"""
         
         return wordcloud
     
-    def update_display(self, wordcloud):
+    def update_display(self, wordcloud, update_status=True):
         """Update the matplotlib display with new word cloud"""
         self.ax.clear()
         
@@ -443,8 +442,22 @@ Try the demo URL or paste your own website link to get started!"""
         self.save_btn.config(state='normal')
         
         # Show word count in status
-        word_count = len(self.word_frequencies) if hasattr(self, 'word_frequencies') else 0
-        self.status_var.set(f"Word cloud created successfully! ({word_count} unique words processed)")
+        if update_status:
+            word_count = len(self.word_frequencies) if hasattr(self, 'word_frequencies') else 0
+            self.status_var.set(f"Word cloud created successfully! ({word_count} unique words processed)")
+
+    def refresh_wordcloud_style(self, event=None):
+        """Re-render the word cloud using the current style options."""
+        if not getattr(self, 'word_frequencies', None):
+            return
+        if self.processing:
+            return
+        try:
+            wordcloud = self.create_wordcloud_image(self.word_frequencies)
+            self.update_display(wordcloud, update_status=False)
+            self.status_var.set("Updated word cloud styling")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to update word cloud: {str(e)}")
     
     def generate_wordcloud_thread(self):
         """Generate word cloud in separate thread"""
@@ -481,8 +494,7 @@ Try the demo URL or paste your own website link to get started!"""
             self.root.after(0, lambda: messagebox.showerror("Error", str(e)))
             self.root.after(0, lambda: self.status_var.set("Error occurred - Please try again"))
         finally:
-            self.root.after(0, lambda: self.progress.stop())
-            self.root.after(0, lambda: self.generate_btn.config(state='normal'))
+            self.root.after(0, self.finish_processing)
     
     def generate_wordcloud(self):
         """Start word cloud generation"""
@@ -497,6 +509,12 @@ Try the demo URL or paste your own website link to get started!"""
         thread = threading.Thread(target=self.generate_wordcloud_thread)
         thread.daemon = True
         thread.start()
+
+    def finish_processing(self):
+        """Reset UI state after processing completes."""
+        self.processing = False
+        self.progress.stop()
+        self.generate_btn.config(state='normal')
     
     def save_image(self):
         """Save the current word cloud image"""
