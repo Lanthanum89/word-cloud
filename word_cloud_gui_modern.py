@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Professional Word Cloud GUI Application
-This application provides a modern, professional graphical interface for creating word clouds from website content.
+Word Cloud GUI Application
+This application provides a modern graphical interface for creating word clouds from website content.
 """
 
 import tkinter as tk
@@ -16,17 +16,16 @@ from collections import Counter
 import threading
 from urllib.parse import urlparse
 import os
-import webbrowser
 import random
 
-class ProfessionalWordCloudGUI:
+class ModernWordCloudGUI:
     def __init__(self, root):
         self.root = root
-        self.root.title("Professional Word Cloud Generator | v2.0")
+        self.root.title("Word Cloud Generator | v2.0")
         self.root.geometry("1400x900")
         self.root.minsize(1200, 800)
         
-        # Professional color scheme
+        # Modern color scheme
         self.colors = {
             'primary': '#2c3e50',      # Dark blue-gray
             'secondary': '#3498db',     # Blue
@@ -127,14 +126,14 @@ class ProfessionalWordCloudGUI:
         
         # App title
         title_label = tk.Label(header_frame, 
-                              text="🌐 Word Cloud Generator",
+                              text="Word Cloud Generator",
                               font=('Segoe UI', 18, 'bold'),
                               bg=self.colors['primary'],
                               fg=self.colors['white'])
         title_label.pack(expand=True)
         
         subtitle_label = tk.Label(header_frame,
-                                 text="Transform website content into beautiful visualizations",
+                                 text="Transform website content into beautiful visualisations",
                                  font=('Segoe UI', 10),
                                  bg=self.colors['primary'],
                                  fg=self.colors['light'])
@@ -156,7 +155,7 @@ class ProfessionalWordCloudGUI:
         # === LEFT PANEL CONTENT ===
         
         # URL Input Card
-        url_card = ttk.LabelFrame(left_panel, text="🌍 Website URL", style='Card.TLabelframe', padding=20)
+        url_card = ttk.LabelFrame(left_panel, text="Website URL", style='Card.TLabelframe', padding=20)
         url_card.pack(fill=tk.X, pady=(0, 15))
         
         ttk.Label(url_card, text="Enter website URL:", style='Modern.TLabel').pack(anchor=tk.W, pady=(0, 8))
@@ -169,7 +168,7 @@ class ProfessionalWordCloudGUI:
         self.url_entry.pack(fill=tk.X, pady=(0, 10))
         
         # Generate button
-        self.generate_btn = ttk.Button(url_frame, text="🚀 Generate Word Cloud", 
+        self.generate_btn = ttk.Button(url_frame, text="Generate Word Cloud", 
                                       command=self.generate_wordcloud, style='Accent.TButton')
         self.generate_btn.pack(fill=tk.X)
         
@@ -178,7 +177,7 @@ class ProfessionalWordCloudGUI:
         self.progress.pack(fill=tk.X, pady=(10, 0))
         
         # Options Card
-        options_card = ttk.LabelFrame(left_panel, text="⚙️ Customization Options", style='Card.TLabelframe', padding=20)
+        options_card = ttk.LabelFrame(left_panel, text="Customisation Options", style='Card.TLabelframe', padding=20)
         options_card.pack(fill=tk.X, pady=(0, 15))
         
         # Word count options
@@ -209,6 +208,7 @@ class ProfessionalWordCloudGUI:
         colormap_combo['values'] = ('viridis', 'plasma', 'inferno', 'magma', 'coolwarm', 'tab10', 'Set3', 'rainbow', 'spring', 'summer')
         colormap_combo.pack(anchor=tk.W, pady=(5, 0))
         colormap_combo.state(['readonly'])
+        colormap_combo.bind('<<ComboboxSelected>>', self.refresh_wordcloud_style)
         
         # Background color
         bg_frame = tk.Frame(options_card, bg=self.colors['white'])
@@ -220,28 +220,29 @@ class ProfessionalWordCloudGUI:
         bg_combo['values'] = ('white', 'black', 'lightgray', 'navy', 'darkgreen', 'darkblue', 'maroon')
         bg_combo.pack(anchor=tk.W, pady=(5, 0))
         bg_combo.state(['readonly'])
+        bg_combo.bind('<<ComboboxSelected>>', self.refresh_wordcloud_style)
         
         # Action Buttons Card
-        actions_card = ttk.LabelFrame(left_panel, text="💾 Actions", style='Card.TLabelframe', padding=20)
+        actions_card = ttk.LabelFrame(left_panel, text="Actions", style='Card.TLabelframe', padding=20)
         actions_card.pack(fill=tk.X, pady=(0, 15))
         
         # Save button
-        self.save_btn = ttk.Button(actions_card, text="💾 Save Image", 
+        self.save_btn = ttk.Button(actions_card, text="Save Image", 
                                   command=self.save_image, style='Modern.TButton', state='disabled')
         self.save_btn.pack(fill=tk.X, pady=(0, 10))
         
         # Clear button
-        self.clear_btn = ttk.Button(actions_card, text="🗑️ Clear Display", 
+        self.clear_btn = ttk.Button(actions_card, text="Clear Display", 
                                    command=self.clear_display, style='Modern.TButton')
         self.clear_btn.pack(fill=tk.X, pady=(0, 10))
         
         # Demo button
-        self.demo_btn = ttk.Button(actions_card, text="🎯 Try Demo URL", 
+        self.demo_btn = ttk.Button(actions_card, text="Try Demo URL", 
                                   command=self.load_demo_url, style='Modern.TButton')
         self.demo_btn.pack(fill=tk.X)
         
         # Info Card
-        info_card = ttk.LabelFrame(left_panel, text="ℹ️ Quick Tips", style='Card.TLabelframe', padding=15)
+        info_card = ttk.LabelFrame(left_panel, text="Quick Tips", style='Card.TLabelframe', padding=15)
         info_card.pack(fill=tk.X)
         
         tips_text = """• Wikipedia articles work great
@@ -261,7 +262,7 @@ class ProfessionalWordCloudGUI:
         # === RIGHT PANEL CONTENT ===
         
         # Visualization Card
-        viz_card = ttk.LabelFrame(right_panel, text="📊 Word Cloud Visualization", style='Card.TLabelframe', padding=20)
+        viz_card = ttk.LabelFrame(right_panel, text="Word Cloud Visualization", style='Card.TLabelframe', padding=20)
         viz_card.pack(fill=tk.BOTH, expand=True)
         
         # Create matplotlib figure with modern styling
@@ -278,7 +279,7 @@ class ProfessionalWordCloudGUI:
         self.ax.axis('off')
         
         # Welcome message
-        welcome_text = """🎨 Welcome to Professional Word Cloud Generator
+        welcome_text = """Welcome to Word Cloud Generator
         
 Enter a website URL and click "Generate Word Cloud" to create beautiful visualizations.
 
@@ -301,7 +302,7 @@ Try the demo URL or paste your own website link to get started!"""
         status_frame.pack(fill=tk.X, pady=(20, 0))
         status_frame.pack_propagate(False)
         
-        self.status_var = tk.StringVar(value="Ready • Professional Word Cloud Generator v2.0")
+        self.status_var = tk.StringVar(value="Ready • Word Cloud Generator v2.0")
         status_label = tk.Label(status_frame, textvariable=self.status_var, 
                                font=('Segoe UI', 9),
                                bg=self.colors['primary'], 
@@ -443,7 +444,7 @@ Try the demo URL or paste your own website link to get started!"""
         
         # Show word count in status
         word_count = len(self.word_frequencies) if hasattr(self, 'word_frequencies') else 0
-        self.status_var.set(f"✓ Word cloud created successfully! ({word_count} unique words processed)")
+        self.status_var.set(f"Word cloud created successfully! ({word_count} unique words processed)")
     
     def generate_wordcloud_thread(self):
         """Generate word cloud in separate thread"""
@@ -453,24 +454,24 @@ Try the demo URL or paste your own website link to get started!"""
             messagebox.showerror("Error", "Please enter a valid website URL")
             self.progress.stop()
             self.generate_btn.config(state='normal')
-            self.status_var.set("Ready • Professional Word Cloud Generator v2.0")
+            self.status_var.set("Ready • Word Cloud Generator v2.0")
             return
         
         try:
-            self.status_var.set("🌐 Fetching website content...")
+            self.status_var.set("Fetching website content...")
             text = self.fetch_website_content(url)
             
             if not text.strip():
                 raise Exception("No text content found on the website")
             
-            self.status_var.set("🔍 Processing text and analyzing words...")
+            self.status_var.set("Processing text and analyzing words...")
             word_frequencies = self.process_text(text)
             self.word_frequencies = word_frequencies
             
             if not word_frequencies:
                 raise Exception("No valid words found after processing")
             
-            self.status_var.set("🎨 Creating beautiful word cloud...")
+            self.status_var.set("Creating beautiful word cloud...")
             wordcloud = self.create_wordcloud_image(word_frequencies)
             
             # Update GUI in main thread
@@ -478,7 +479,7 @@ Try the demo URL or paste your own website link to get started!"""
             
         except Exception as e:
             self.root.after(0, lambda: messagebox.showerror("Error", str(e)))
-            self.root.after(0, lambda: self.status_var.set("❌ Error occurred - Please try again"))
+            self.root.after(0, lambda: self.status_var.set("Error occurred - Please try again"))
         finally:
             self.root.after(0, lambda: self.progress.stop())
             self.root.after(0, lambda: self.generate_btn.config(state='normal'))
@@ -513,7 +514,7 @@ Try the demo URL or paste your own website link to get started!"""
             try:
                 self.current_wordcloud.to_file(filename)
                 messagebox.showinfo("Success", f"Word cloud saved successfully!\n\nLocation: {filename}")
-                self.status_var.set(f"💾 Image saved: {os.path.basename(filename)}")
+                self.status_var.set(f"Image saved: {os.path.basename(filename)}")
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to save image: {str(e)}")
     
@@ -521,7 +522,7 @@ Try the demo URL or paste your own website link to get started!"""
         """Clear the word cloud display"""
         self.ax.clear()
         
-        welcome_text = """🎨 Welcome to Professional Word Cloud Generator
+        welcome_text = """Welcome to Word Cloud Generator
         
 Enter a website URL and click "Generate Word Cloud" to create beautiful visualizations.
 
@@ -538,12 +539,12 @@ Try the demo URL or paste your own website link to get started!"""
         self.canvas.draw()
         self.current_wordcloud = None
         self.save_btn.config(state='disabled')
-        self.status_var.set("Ready • Professional Word Cloud Generator v2.0")
+        self.status_var.set("Ready • Word Cloud Generator v2.0")
 
 def main():
-    """Main function to run the professional GUI application"""
+    """Main function to run the modern GUI application"""
     root = tk.Tk()
-    app = ProfessionalWordCloudGUI(root)
+    app = ModernWordCloudGUI(root)
     
     # Center the window on screen
     root.update_idletasks()
